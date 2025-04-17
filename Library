@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Book Haven - Online Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            background-color: #34495e;
+            padding: 0.5rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #2c3e50;
+        }
+        
+        .search-bar {
+            padding: 20px 0;
+            background-color: #ecf0f1;
+            text-align: center;
+        }
+        
+        .search-bar input {
+            padding: 10px;
+            width: 60%;
+            max-width: 500px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+        
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 30px 0;
+        }
+        
+        .book-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .book-cover {
+            height: 300px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+        }
+        
+        .book-info {
+            padding: 15px;
+        }
+        
+        .book-info h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .book-info p {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .rating {
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .action-buttons button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .read-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .review-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .reader-section {
+            display: none;
+            padding: 30px 0;
+        }
+        
+        .reader-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-reader {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .book-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            line-height: 1.8;
+        }
+        
+        .review-section {
+            display: none;
+            padding: 30px 0;
+        }
+        
+        .review-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .review-form h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, 
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+        }
+        
+        .submit-review {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .reviews-list {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .review-item {
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-author {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .review-date {
+            color: #95a5a6;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .review-text {
+            margin-top: 10px;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .book-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Digital Book Haven</h1>
+            <p>Read, Explore, Review</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Browse</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">Popular</a></li>
+                <li><a href="#">My Books</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <section class="search-bar">
+        <div class="container">
+            <input type="text" placeholder="Search for books, authors, or genres...">
+            <button>Search</button>
+        </div>
+    </section>
+    
+    <main class="container">
+        <section class="featured-books">
+            <h2>Featured Books</h2>
+            <div class="book-grid">
+                <!-- Book 1 -->
+                <div class="book-card">
+                    <div class="book-cover">Book Cover</div>
+                    <div class="book-info">
+                        <h3>The Silent Echo</h3>
+                        <p>By Jane Doe</p>
+                        <p>Fiction, Mystery</p>
+                        <div class="rating">★★★★☆</div>
+                        <div class="action-buttons">
+                            <button class="read-btn" onclick="openReader('The Silent Echo')">Read</button>
+                            <button class="review-btn" onclick="openReview('The Silent Echo')">Review</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book 2 -->
+                <div class="book-card">
+                    <div class="book-cover">Book Cover</div>
+                    <div class="book-info">
+                        <h3>Beyond the Horizon</h3>
+                        <p>By John Smith</p>
+                        <p>Science Fiction</p>
+                        <div class="rating">★★★★★</div>
+                        <div class="action-buttons">
+                            <button class="read-btn" onclick="openReader('Beyond the Horizon')">Read</button>
+                            <button class="review-btn" onclick="openReview('Beyond the Horizon')">Review</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book 3 -->
+                <div class="book-card">
+                    <div class="book-cover">Book Cover</div>
+                    <div class="book-info">
+                        <h3>Culinary Adventures</h3>
+                        <p>By Maria Garcia</p>
+                        <p>Non-fiction, Cooking</p>
+                        <div class="rating">★★★☆☆</div>
+                        <div class="action-buttons">
+                            <button class="read-btn" onclick="openReader('Culinary Adventures')">Read</button>
+                            <button class="review-btn" onclick="openReview('Culinary Adventures')">Review</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book 4 -->
+                <div class="book-card">
+                    <div class="book-cover">Book Cover</div>
+                    <div class="book-info">
+                        <h3>The Last Kingdom</h3>
+                        <p>By Robert Johnson</p>
+                        <p>Historical Fiction</p>
+                        <div class="rating">★★★★☆</div>
+                        <div class="action-buttons">
+                            <button class="read-btn" onclick="openReader('The Last Kingdom')">Read</button>
+                            <button class="review-btn" onclick="openReview('The Last Kingdom')">Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="reader" class="reader-section">
+            <div class="reader-header">
+                <h2 id="reader-title">Book Title</h2>
+                <button class="close-reader" onclick="closeReader()">Close Reader</button>
+            </div>
+            <div class="book-content">
+                <p id="book-text">Book content will appear here...</p>
+            </div>
+        </section>
+        
+        <section id="review" class="review-section">
+            <h2>Leave a Review for <span id="review-book-title">Book Title</span></h2>
+            
+            <div class="review-form">
+                <h3>Your Review</h3>
+                <form id="review-form">
+                    <div class="form-group">
+                        <label for="reviewer-name">Your Name</label>
+                        <input type="text" id="reviewer-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="review-rating">Rating</label>
+                        <select id="review-rating" required>
+                            <option value="">Select a rating</option>
+                            <option value="5">★★★★★ - Excellent</option>
+                            <option value="4">★★★★☆ - Very Good</option>
+                            <option value="3">★★★☆☆ - Good</option>
+                            <option value="2">★★☆☆☆ - Fair</option>
+                            <option value="1">★☆☆☆☆ - Poor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="review-text">Your Review</label>
+                        <textarea id="review-text" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-review">Submit Review</button>
+                </form>
+            </div>
+            
+            <div class="reviews-list">
+                <h3>Reader Reviews</h3>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-author">Sarah Miller</span>
+                        <span class="review-date">May 15, 2023</span>
+                        <div class="rating">★★★★★</div>
+                    </div>
+                    <div class="review-text">
+                        <p>This book completely changed my perspective on modern fiction. The character development was exceptional and the plot twists kept me engaged until the very last page.</p>
+                    </div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-author">David Wilson</span>
+                        <span class="review-date">April 2, 2023</span>
+                        <div class="rating">★★★☆☆</div>
+                    </div>
+                    <div class="review-text">
+                        <p>While the premise was interesting, I found the middle section to drag on a bit too long. The ending was satisfying though, and the writing style was pleasant.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Digital Book Haven. All rights reserved.</p>
+            <p>Contact: info@digitalbookhaven.com</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Sample book content
+        const bookContents = {
+            "The Silent Echo": `<h3>Chapter 1</h3>
+                <p>The fog rolled in from the harbor, swallowing the cobblestone streets whole. Detective Eleanor Whitmore pulled her trench coat tighter around her shoulders as she approached the crime scene. The body had been found at dawn, posed carefully on a park bench near the old lighthouse.</p>
+                <p>"Same MO as the others," Sergeant Calloway said, handing her a coffee. "No ID, no wallet, just this." He held up a small cassette tape in an evidence bag.</p>
+                <p>Eleanor took the bag and examined it. No label, just like the previous three. She knew what she'd hear when she played it back at the station - thirty seconds of complete silence, followed by a single, whispered word.</p>`,
+                
+            "Beyond the Horizon": `<h3>Prologue</h3>
+                <p>The alarms blared throughout the starship Horizon as Captain Elias Voss sprinted down the corridor. "Report!" he barked as he entered the bridge.</p>
+                <p>"We've crossed into uncharted space, Captain," Lieutenant Mira Chen replied, her fingers flying across the holographic controls. "The jump drive malfunctioned. We're... not where we're supposed to be."</p>
+                <p>The main viewscreen flickered to life, revealing a sight that made even the veteran captain catch his breath. Before them stretched an impossible structure - a Dyson sphere surrounding not a star, but what appeared to be a black hole. And it was transmitting.</p>`,
+                
+            "Culinary Adventures": `<h3>Introduction</h3>
+                <p>Cooking is more than just following recipes - it's about understanding ingredients, respecting traditions, and having the courage to experiment. In this book, I'll take you on a journey through the world's great cuisines, from the street food stalls of Bangkok to the Michelin-starred restaurants of Paris.</p>
+                <h3>Chapter 1: The Basics</h3>
+                <p>Every great dish starts with proper technique. Let's begin with the five mother sauces of French cuisine:</p>
+                <ol>
+                    <li>Béchamel - The creamy white sauce made with milk and roux</li>
+                    <li>Velouté - A light stock-based sauce thickened with roux</li>
+                    <li>Espagnole - The rich brown sauce that forms the base for demi-glace</li>
+                    <li>Tomato - The classic red sauce with countless variations</li>
+                    <li>Hollandaise - The emulsified butter and egg yolk sauce</li>
+                </ol>`,
+                
+            "The Last Kingdom": `<h3>Spring, 1065</h3>
+                <p>The messenger arrived at dusk, his horse lathered with sweat. "My lord," he gasped, falling to his knees before Earl Harold. "The Welsh are massing at the border. They've burned three villages already."</p>
+                <p>Harold Godwinson clenched his jaw. This was the last thing he needed with the king ailing and no clear succession. He turned to his brother Leofwine. "Ready the fyrd. We march at dawn."</p>
+                <p>As the war horns sounded across the countryside, young Edwin watched from the shadows. At sixteen, he was too young to fight but old enough to understand that the world he knew was changing. Little did he know how much would change before the year was out.</p>`
+        };
+        
+        // Open book reader
+        function openReader(bookTitle) {
+            document.querySelector('.featured-books').style.display = 'none';
+            document.getElementById('reader').style.display = 'block';
+            document.getElementById('reader-title').textContent = bookTitle;
+            document.getElementById('book-text').innerHTML = bookContents[bookTitle];
+            window.scrollTo(0, 0);
+        }
+        
+        // Close book reader
+        function closeReader() {
+            document.querySelector('.featured-books').style.display = 'block';
+            document.getElementById('reader').style.display = 'none';
+        }
+        
+        // Open review section
+        function openReview(bookTitle) {
+            document.querySelector('.featured-books').style.display = 'none';
+            document.getElementById('review').style.display = 'block';
+            document.getElementById('review-book-title').textContent = bookTitle;
+            window.scrollTo(0, 0);
+        }
+        
+        // Close review section (called from form submission)
+        function closeReview() {
+            document.querySelector('.featured-books').style.display = 'block';
+            document.getElementById('review').style.display = 'none';
+        }
+        
+        // Handle review form submission
+        document.getElementById('review-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('reviewer-name').value;
+            const rating = document.getElementById('review-rating').value;
+            const text = document.getElementById('review-text').value;
+            const bookTitle = document.getElementById('review-book-title').textContent;
+            
+            // In a real app, you would send this data to a server
+            console.log(`New review for ${bookTitle}:
+Name: ${name}
+Rating: ${rating}/5
+Review: ${text}`);
+            
+            // Show confirmation and reset form
+            alert('Thank you for your review!');
+            this.reset();
+            closeReview();
+        });
+    </script>
+</body>
+</html>
